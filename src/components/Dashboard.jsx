@@ -22,6 +22,15 @@ export default function Dashboard({ account, onLogout }) {
     saveUserData(account.email, updated);
   }
 
+  function handleDeleteTransaction(id) {
+    const updated = {
+      ...data,
+      transactions: data.transactions.filter((t) => t.id !== id),
+    };
+    setData(updated);
+    saveUserData(account.email, updated);
+  }
+
   if (loading) {
     return <p>Carregando...</p>;
   }
@@ -50,7 +59,10 @@ export default function Dashboard({ account, onLogout }) {
           {data.transactions.map((t) => (
             <li key={t.id}>
               {t.date} — {t.note} — {t.type === "income" ? "+" : "-"}
-              {fmtBRL(t.amount)}
+              {fmtBRL(t.amount)}{" "}
+              <button onClick={() => handleDeleteTransaction(t.id)}>
+                Excluir
+              </button>
             </li>
           ))}
         </ul>
