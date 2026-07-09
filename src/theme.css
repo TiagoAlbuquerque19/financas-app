@@ -1,0 +1,26 @@
+:root {
+  /* Cores base — tema "livro-caixa" (ledger escuro) */
+  --bg: #0e1913;
+  --surface: #15251c;
+  --surface-2: #1b2f23;
+  --rule: rgba(201, 162, 39, 0.14);
+
+  /* Texto */
+  --ink: #ede8dc;
+  --ink-dim: #9fafa4;
+  --ink-faint: #6e7c72;
+
+  /* Destaques */
+  --gold: #c9a227;
+  --gold-soft: rgba(201, 162, 39, 0.16);
+  --emerald: #4caf7d;
+  --emerald-soft: rgba(76, 175, 125, 0.14);
+  --rust: #c1554b;
+  --rust-soft: rgba(193, 85, 75, 0.16);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
