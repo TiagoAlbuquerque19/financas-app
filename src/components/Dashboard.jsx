@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { loadUserData, saveUserData } from "../utils/storage";
-import { fmtBRL } from "../utils/helpers";
+import { fmtBRL, monthKey } from "../utils/helpers";
+import { MONTHS_PT } from "../utils/constants";
 import TransactionForm from "./TransactionForm";
 
 export default function Dashboard({ account, onLogout }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [cursor, setCursor] = useState(new Date());
   useEffect(() => {
     const d = loadUserData(account.email);
     setData(d);
@@ -31,9 +32,23 @@ export default function Dashboard({ account, onLogout }) {
     saveUserData(account.email, updated);
   }
 
+  const curKey = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`;
+
+  function prevMonth() {
+    setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1));
+  }
+
+  function nextMonth() {
+    setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1));
+  }
+
   if (loading) {
     return <p>Carregando...</p>;
   }
+
+  const monthTransactions = data.transactions.filter(
+    (t) => monthKey(t.date) === curKey,
+  );
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -48,15 +63,23 @@ export default function Dashboard({ account, onLogout }) {
       <main style={{ flex: 1, padding: 24 }}>
         <h1>Painel</h1>
 
+        <div style={{ marginBottom: 16 }}>
+          <button onClick={prevMonth}>{"<"}</button>{" "}
+          <strong>
+            {MONTHS_PT[cursor.getMonth()]} {cursor.getFullYear()}
+          </strong>{" "}
+          <button onClick={nextMonth}>{">"}</button>
+        </div>
+
         <TransactionForm
           categories={data.categories}
           onAdd={handleAddTransaction}
         />
 
-        <h2>Lançamentos ({data.transactions.length})</h2>
-        {data.transactions.length === 0 && <p>Nenhum lançamento ainda.</p>}
+        <h2>Lançamentos ({monthTransactions.length})</h2>
+        {monthTransactions.length === 0 && <p>Nenhum lançamento ainda.</p>}
         <ul>
-          {data.transactions.map((t) => (
+          {monthTransactions.map((t) => (
             <li key={t.id}>
               {t.date} — {t.note} — {t.type === "income" ? "+" : "-"}
               {fmtBRL(t.amount)}{" "}
