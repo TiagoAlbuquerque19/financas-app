@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AuthScreen from "./components/AuthScreen";
+import Dashboard from "./components/Dashboard";
 import {
   loadAccount,
   loadSession,
@@ -11,7 +12,6 @@ function App() {
   const [account, setAccount] = useState(null);
   const [checking, setChecking] = useState(true);
 
-  // Roda uma vez, quando o app carrega
   useEffect(() => {
     const session = loadSession();
     if (session) {
@@ -31,20 +31,13 @@ function App() {
     clearSession();
   }
 
-  if (checking) {
-    return null; // evita "piscar" a tela de login antes de checar
-  }
+  if (checking) return null;
 
   if (!account) {
     return <AuthScreen onLogin={handleLogin} />;
   }
 
-  return (
-    <div style={{ padding: 24 }}>
-      <h1>Bem-vindo, {account.name || account.email}!</h1>
-      <button onClick={handleLogout}>Sair</button>
-    </div>
-  );
+  return <Dashboard account={account} onLogout={handleLogout} />;
 }
 
 export default App;

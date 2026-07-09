@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { loadAccount, saveAccount } from "../utils/storage";
+import { loadAccount, saveAccount, saveUserData } from "../utils/storage";
+import { emptyUserData } from "../utils/seed";
 
 export default function AuthScreen({ onLogin }) {
-  const [mode, setMode] = useState("login"); // "login" ou "cadastro"
+  const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +21,7 @@ export default function AuthScreen({ onLogin }) {
       }
       const account = { name, email: key, password };
       saveAccount(key, account);
+      saveUserData(key, emptyUserData());
       onLogin(account);
     } else {
       const account = loadAccount(key);

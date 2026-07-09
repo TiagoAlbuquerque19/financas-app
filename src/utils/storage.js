@@ -34,3 +34,20 @@ export function saveSession(email) {
 export function clearSession() {
   localStorage.removeItem("fin:session");
 }
+
+export function loadUserData(email) {
+  try {
+    const raw = localStorage.getItem(`fin:data:${email}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveUserData(email, data) {
+  try {
+    localStorage.setItem(`fin:data:${email}`, JSON.stringify(data));
+  } catch (e) {
+    console.error("Erro ao salvar dados:", e);
+  }
+}
